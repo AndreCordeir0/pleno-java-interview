@@ -4,12 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_roles")
-public class UserRole {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
-
+public class UserRole extends BaseModel{
 
     @JoinColumn(name = "ROLE_ID")
     @ManyToOne

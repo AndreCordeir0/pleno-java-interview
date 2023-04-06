@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +24,7 @@ public class WebSecurityConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
-    return authProvider;
+        return authProvider;
     }
 
     @Bean
@@ -42,9 +43,12 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests((request)->{
                     request.requestMatchers(HttpMethod.POST,"/api/v1/user/new").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/user/token").permitAll()
+                            .requestMatchers(HttpMethod.PUT,"/api/v1/user/modify").hasRole("USER")
                     .anyRequest().authenticated();
                 });
         http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

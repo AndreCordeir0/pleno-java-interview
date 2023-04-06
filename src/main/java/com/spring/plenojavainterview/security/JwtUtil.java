@@ -29,9 +29,9 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String generateToken(String username){
+    public String generateToken(String email){
         Map<String, Object> claim = new HashMap<String, Object>();
-        return generateTokenFromUsername(claim,username);
+        return generateTokenFromUsername(claim,email);
     }
     private Boolean isTokenExpired(String token) {
         final Date dataValidade = obterDataValidade(token);
@@ -51,10 +51,10 @@ public class JwtUtil {
     private Claims obterClaims(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
-    public String generateTokenFromUsername(Map<String, Object> claim , String username) {
+    public String generateTokenFromUsername(Map<String, Object> claim , String email) {
         return Jwts.builder()
                 .setClaims(claim)
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

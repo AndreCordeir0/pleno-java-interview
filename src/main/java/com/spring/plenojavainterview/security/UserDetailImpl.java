@@ -32,7 +32,7 @@ public class UserDetailImpl implements UserDetails {
     }
 
     public static UserDetailImpl build(User user){
-        Set<GrantedAuthority> authorities = user.getRolesUser().stream().map(e->new SimpleGrantedAuthority(e.getRoleId().getRole().toString())).collect(Collectors.toSet());
+        Set<GrantedAuthority> authorities = user.getRolesUser().stream().map(e->new SimpleGrantedAuthority("ROLE_" + e.getRoleId().getRole().toString())).collect(Collectors.toSet());
         return new UserDetailImpl(
                 user.getId(),
                 user.getEmail(),
@@ -54,7 +54,7 @@ public class UserDetailImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.nome;
+        return this.email;
     }
 
     @Override
