@@ -10,10 +10,12 @@ import com.spring.plenojavainterview.model.UserRole;
 import com.spring.plenojavainterview.security.JwtUtil;
 import com.spring.plenojavainterview.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -45,23 +47,38 @@ public class UserService implements IUserService {
 
     public String requestToken(String email, String senha){
         if(Objects.isNull(email) || Objects.isNull(senha)){
-            throw new UsernameNotFoundException("Email ou senha incorretos");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email ou senha incorretos");
         }
-        User user = userDAO.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("Email incorreto"));
+        User user = userDAO.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("Email incorreto"));
         boolean isValido = matchPassword(senha,user.getSenha());
         if(isValido){
             return jwtUtil.generateToken(user.getEmail());
         }
-        throw new UsernameNotFoundException("Email ou senha incorretos");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email ou senha incorretos");
     }
 
+    public User alterUser(User user, String token){
+        if(Objects.isNull(token))throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a esse funcionalidade");
+        String email = jwtUtil.getUsuarioWithToken(token);
+        User userDataBase = userDAO.findByEmail(email).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Erro ao recuperar usuario"));
+        updateUser(userDataBase, user);
+        userDAO.save(userDataBase);
+        return user;
+    }
+    private void updateUser(User userDataBase, User userToAlter){
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+        userDataBase.setNome(userToAlter.getNome());
+        userDataBase.setSenha(bc.encode(userToAlter.getSenha()));
+        userDataBase.setTelefone(userToAlter.getTelefone());
+        userDataBase.setEmail(userToAlter.getEmail());
+    }
     private boolean matchPassword(String passwordRequest, String passwordDataBase){
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
         if(bc.matches(passwordRequest,passwordDataBase)) return true;
         return false;
     }
     private void createUserRole(User user){
-        Role rolemodel = roleDAO.findById(RoleEnum.USER.getRoleId()).orElseThrow(()-> new RuntimeException());
+        Role rolemodel = roleDAO.findById(RoleEnum.USER.getRoleId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro ao recuperar Roles"));
         UserRole userRole = new UserRole();
         userRole.setRoleId(rolemodel);
         userRole.setRoleUser(user);

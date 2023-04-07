@@ -3,10 +3,13 @@ package com.spring.plenojavainterview.rest;
 import com.spring.plenojavainterview.model.User;
 import com.spring.plenojavainterview.security.UserServiceImpl;
 import com.spring.plenojavainterview.service.impl.UserService;
+import com.spring.plenojavainterview.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -32,13 +35,12 @@ public class UserRest {
         try {
             return userService.requestToken(email,senha);
         }catch (Exception e){
-            throw new RuntimeException("Erro ao recuperar token");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Erro ao recuperar token");
         }
     }
 
     @PutMapping("/modify")
-    public User modifyUser(@RequestBody User user){
-        System.out.println(user);
-        return null;
+    public User modifyUser(@RequestBody User user, @RequestHeader("Authorization") String authorizationHeader){
+        return userService.alterUser(user,TokenUtil.getTokenWithBearer(authorizationHeader));
     }
 }

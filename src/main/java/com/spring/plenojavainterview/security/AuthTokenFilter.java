@@ -14,14 +14,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.spring.plenojavainterview.util.TokenUtil.HEADER_STRING;
+import static com.spring.plenojavainterview.util.TokenUtil.TOKEN_PREFIX;
+
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
     private UserServiceImpl userDetailsService;
-    public static final String HEADER_STRING = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,8 +39,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 System.out.println("Erro ao recuperar usuario por token");
             }
         }
-
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
         if (Objects.nonNull(usuario) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(usuario);
 

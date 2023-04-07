@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface UserDAO extends JpaRepository<User, Long> {
 
     @Query("SELECT user FROM User user LEFT JOIN FETCH user.rolesUser WHERE user.email = :email")
-    public Optional<User> findByUsername(@Param("email")String email);
+    public Optional<User> findByEmail(@Param("email")String email);
 
 }
