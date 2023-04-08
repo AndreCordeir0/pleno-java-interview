@@ -24,8 +24,14 @@ public class UserPaginationDTO {
         this.nome = nome;
     }
 
-    public UserPaginationDTO(User user){
-        this.nome = user.getNome();
-        this.id = user.getId();
+    public UserPaginationDTO(){
+
+    }
+
+    public static UserPaginationDTO build(User user){
+        UserPaginationDTO userPaginationDTO = new UserPaginationDTO();
+        userPaginationDTO.setId(user.getId());
+        userPaginationDTO.setNome(user.getNome());
+        return userPaginationDTO;
     }
 }

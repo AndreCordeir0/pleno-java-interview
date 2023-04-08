@@ -1,7 +1,4 @@
-package com.spring.plenojavainterview.security.pageable;
-
-import com.spring.plenojavainterview.util.ListaUtils;
-import org.springframework.data.domain.Page;
+package com.spring.plenojavainterview.pageable;
 
 import java.util.ArrayList;
 import java.util.List;

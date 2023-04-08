@@ -9,7 +9,7 @@ import com.spring.plenojavainterview.enums.RoleEnum;
 import com.spring.plenojavainterview.model.Role;
 import com.spring.plenojavainterview.model.User;
 import com.spring.plenojavainterview.model.UserRole;
-import com.spring.plenojavainterview.security.pageable.Pageable;
+import com.spring.plenojavainterview.pageable.Pageable;
 import com.spring.plenojavainterview.security.JwtUtil;
 import com.spring.plenojavainterview.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +87,7 @@ public class UserService implements IUserService {
     }
     private boolean matchPassword(String passwordRequest, String passwordDataBase){
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-        if(bc.matches(passwordRequest,passwordDataBase)) return true;
-        return false;
+        return bc.matches(passwordRequest, passwordDataBase);
     }
     private void createUserRole(User user){
         Role rolemodel = roleDAO.findById(RoleEnum.USER.getRoleId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro ao recuperar Roles"));
