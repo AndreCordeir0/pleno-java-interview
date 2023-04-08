@@ -65,7 +65,7 @@ public class UserService implements IUserService {
     }
 
     public User alterUser(User user, String token){
-        if(Objects.isNull(token))throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a esse funcionalidade");
+        if(Objects.isNull(token))throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Você não tem acesso a essa funcionalidade");
         String email = jwtUtil.getUsuarioWithToken(token);
         User userDataBase = userDAO.findByEmail(email).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Erro ao recuperar usuario"));
         updateUser(userDataBase, user);
