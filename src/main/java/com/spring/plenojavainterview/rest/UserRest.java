@@ -1,17 +1,17 @@
 package com.spring.plenojavainterview.rest;
 
+import com.spring.plenojavainterview.dto.UserPaginationDTO;
 import com.spring.plenojavainterview.model.User;
-import com.spring.plenojavainterview.security.UserServiceImpl;
+import com.spring.plenojavainterview.security.pageable.Pageable;
 import com.spring.plenojavainterview.service.impl.UserService;
 import com.spring.plenojavainterview.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -42,5 +42,14 @@ public class UserRest {
     @PutMapping("/modify")
     public User modifyUser(@RequestBody User user, @RequestHeader("Authorization") String authorizationHeader){
         return userService.alterUser(user,TokenUtil.getTokenWithBearer(authorizationHeader));
+    }
+
+    @GetMapping("/list-all")
+    public List<UserPaginationDTO> listarUsuarios(    @RequestParam(required = true) int pageSize,
+                                         @RequestParam(required = true) int pageNumber){
+        Pageable<UserPaginationDTO> paginacao = new Pageable<UserPaginationDTO>();
+        paginacao.setPageNumber(pageNumber);
+        paginacao.setPageSize(pageSize);
+        return userService.listAllUsers(paginacao);
     }
 }

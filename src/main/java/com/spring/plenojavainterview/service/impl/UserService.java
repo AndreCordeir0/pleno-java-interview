@@ -3,10 +3,13 @@ package com.spring.plenojavainterview.service.impl;
 import com.spring.plenojavainterview.dao.RoleDAO;
 import com.spring.plenojavainterview.dao.UserDAO;
 import com.spring.plenojavainterview.dao.UserRoleDAO;
+import com.spring.plenojavainterview.dao.impl.UserDAOImpl;
+import com.spring.plenojavainterview.dto.UserPaginationDTO;
 import com.spring.plenojavainterview.enums.RoleEnum;
 import com.spring.plenojavainterview.model.Role;
 import com.spring.plenojavainterview.model.User;
 import com.spring.plenojavainterview.model.UserRole;
+import com.spring.plenojavainterview.security.pageable.Pageable;
 import com.spring.plenojavainterview.security.JwtUtil;
 import com.spring.plenojavainterview.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,6 +30,9 @@ import java.util.Set;
 public class UserService implements IUserService {
     @Autowired
     UserDAO userDAO;
+
+    @Autowired
+    UserDAOImpl userDAOImpl;
 
     @Autowired
     UserRoleDAO userRoleDAO;
@@ -64,6 +71,12 @@ public class UserService implements IUserService {
         updateUser(userDataBase, user);
         userDAO.save(userDataBase);
         return user;
+    }
+
+    public List<UserPaginationDTO> listAllUsers(Pageable<UserPaginationDTO> paginacao){
+        Pageable<UserPaginationDTO> listaUsuarios = userDAOImpl.listarUsuarios(paginacao);
+
+        return listaUsuarios.getLista();
     }
     private void updateUser(User userDataBase, User userToAlter){
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();

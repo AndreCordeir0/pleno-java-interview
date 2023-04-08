@@ -89,4 +89,9 @@ public class User extends BaseModel{
     }
     public User() {
     }
+
+    public User(User user) {
+        this.nome = user.getNome();
+        this.id= user.getId();
+    }
 }
