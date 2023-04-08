@@ -42,5 +42,6 @@
 |`http://localhost:8080/api/v1/user/modify`                              | PUT | Altera as informações do usuario | Sim |
 |`http://localhost:8080/api/v1/user/list-all`                        | GET | Retorna todos os usuarios paginados | Sim |
 
+## Query Params
 
 para o endpoint `http://localhost:8080/api/v1/user/list-all` deve ser passado os seguintes query params : `http://localhost:8080/api/v1/user/list-all?pageSize=10&pageNumber=0` 
