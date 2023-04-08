@@ -45,3 +45,7 @@
 ## Query Params
 
 para o endpoint `http://localhost:8080/api/v1/user/list-all` deve ser passado os seguintes query params : `http://localhost:8080/api/v1/user/list-all?pageSize=10&pageNumber=0` 
+
+## Base de dados
+
+O Script para a geração da base está no arquivo database.sql, para rodar o projeto altere as configurações do banco no arquivo application.properties e coloque a senha e o user do seu banco
