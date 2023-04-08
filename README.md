@@ -38,7 +38,7 @@
 |  URL |  Método | Descrição | Autenticação |
 |----------|--------------|--------------|
 |`http://localhost:8080/api/v1/user/new`                                 | POST | Cria um novo usuario| Não |
-|`http://localhost:8080/api/v1/user/token`                               | POST | Gera um token para autenticação(é necessario passar email e senha no Form Data)| Não |
+|`http://localhost:8080/api/v1/user/token`                               | POST | Gera um token para autenticação(é necessario passar email e senha no Form Data)| Não|
 |`http://localhost:8080/api/v1/user/modify`                              | PUT | Altera as informações do usuario | Sim |
 |`http://localhost:8080/api/v1/user/list-all`                        | GET | Retorna todos os usuarios paginados | Sim |
 
